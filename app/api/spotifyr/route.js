@@ -1,4 +1,9 @@
-export async function GET() {
+export async function GET(request) {
+
+  const {searchParams} = new URL(request.url);
+  const type = searchParams.get('type');
+  const query = searchParams.get('q');
+  console.log(query)
 
   async function spot(){
     const response = await fetch("https://accounts.spotify.com/api/token", 
@@ -12,15 +17,45 @@ export async function GET() {
         })
       }
     );
-    console.log(response.status)
+    
     if(response.ok){
-      console.log("lol")
       const a = await response.json();
       return a
     }
   }
   const ab = await spot();
-  console.log(ab);
+  const token = ab.access_token;
+  let nQ = "";
 
-  return Response.json({"token" : ab.access_token});
+  for(let c of query){
+    if(c != " "){
+      nQ += c;
+    }
+    else{
+      nQ += "+";
+    }
+  }
+
+  const Nurl = "https://api.spotify.com/v1/search?q=" + nQ +"&type=" + type + "&limit=3&offset=0"
+  console.log(Nurl)
+
+  async function searchSpot(){
+    const response = await fetch(Nurl,
+      {
+        method : "GET",
+        headers: {Authorization : "Bearer " + token}
+      }
+    );
+    console.log(response.status)
+    if(response.ok){
+      const a = await response.json();
+      return a
+    }
+  }
+
+  const respq = await searchSpot();
+  const items = respq.albums.items;
+  console.log(respq.albums.items)
+
+  return Response.json({"token" : items});
 }
