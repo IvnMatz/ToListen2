@@ -36,7 +36,7 @@ export async function GET(request) {
     }
   }
 
-  const Nurl = "https://api.spotify.com/v1/search?q=" + nQ +"&type=" + type + "&limit=3&offset=0"
+  const Nurl = "https://api.spotify.com/v1/search?q=" + nQ +"&type=" + type + "&limit=5&offset=0"
   console.log(Nurl)
 
   async function searchSpot(){

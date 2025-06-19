@@ -1,12 +1,28 @@
 import { useState, useRef, useEffect } from "react";
+import "./results.css"
 
-function Results(){
+function Result({data}){
 
     return(
-        <div className="results">
+        <div className="result">
+            <img src={data.images[2].url} alt="" />
+            <h3> {data.name} </h3>
+            <p> {data.artists[0].name} </p>
 
         </div>
     );
+}
+
+function ResultList({data}){
+
+    return(
+        <div className="resultL">
+            {data.map((d, index) => (
+                <Result  data={d} key={index}/>
+            ))}
+        </div>
+    );
+    
 }
 
 export default function Searcher(){
@@ -42,14 +58,15 @@ export default function Searcher(){
 
     return(
         <div className="searcher">
-            <input type="text" name="inputSearch" id="search" ref={refInput} onChange={changeInput} />
+            <input type="text" name="inputSearch" id="search" ref={refInput} onChange={changeInput}
+            autoComplete="off" />
             <select name="type" id="typer" ref={refer} >
                 <option value="none"> Select an option </option>
                 <option value="album"> Album </option>
                 <option value="artist"> Artist </option>
                 <option value="track"> Song </option>
             </select>
-            <Results />
+            <ResultList data={response} />
         </div>
     );
 }
